@@ -1,0 +1,89 @@
+#!/bin/bash
+#
+# Created by: Westley K
+# Email: westley@sylabs.io
+# Date: Jul 5, 2018
+# Version-1.1
+# https://github.com/WestleyK/backlight-adjust
+#
+
+input_blk=$1
+if [[ -n $input_blk ]]; then
+	case $input_blk in
+		-h | -help | --help)
+			echo "Usage: backlight-adjust [-option]
+	-h | -help | --help (display help menu)
+	15-255 | -15--255 (adjust backlight from 15 to 255)
+	-b (adjust below 15)
+	-p (adjust thrught 10-100%)
+	-d (desplay current brightness from 0-255)"
+			exit
+			;;
+		*[0-9]*)
+			bright="true"
+			;;
+		-b)
+			echo "this feature is comming soon!"
+			exit
+			;;
+		-p)
+			echo "this feature is comming soon!"
+			exit
+			;;
+		-d)
+			display="true"
+			;;
+		*)
+			echo "Option not found!"
+			echo "Try: backlight-adjuster -help"
+			exit
+			;;
+	esac
+fi
+
+
+if [[ $bright == "true" ]]; then
+	if [[ $input_blk = *"-"* ]]; then
+		input_blk=$( echo $input_blk | cut -c2- )
+	fi
+	if [[ $input_blk -lt "15" ]]; then
+		echo "Error: must be greater then 15"
+		echo "Or try: backlight-adjust -b"
+		exit
+	fi
+	if [[ $input_blk -gt "255" ]]; then
+		echo "Error: must be less than 255"
+		exit
+	fi
+	sudo bash -c "echo $input_blk > /sys/class/backlight/rpi_backlight/brightness"
+	exit
+fi
+
+if [[ $display == "true" ]]; then
+	echo "Scale: 0-255"
+	cat /sys/class/backlight/rpi_backlight/brightness
+	exit
+fi
+
+
+echo -n "[15-255]:"
+read blk
+echo
+
+if [[ $blk != [0-9] ]]; then
+	echo "Error: must be numbers only!"
+	exit
+fi
+if [[ $blk -lt "15" ]]; then
+	echo "Error: must be greater than 15"
+	echo "Or try: backlight-adjust -b"
+	exit
+fi
+
+sudo bash -c "echo $blk > /sys/class/backlight/rpi_backlight/brightness"
+
+
+#
+# End script
+#
+
