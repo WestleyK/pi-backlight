@@ -70,8 +70,12 @@ echo -n "[15-255]:"
 read blk
 echo
 
-if [[ $blk != [0-9] ]]; then
+if [[ $blk != [0-9]* ]]; then
 	echo "Error: must be numbers only!"
+	exit
+fi
+if [[ $blk -gt "255" ]]; then
+	echo "Error: must be less than 255"
 	exit
 fi
 if [[ $blk -lt "15" ]]; then
