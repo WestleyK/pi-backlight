@@ -2,8 +2,8 @@
 #
 # Created by: Westley K
 # Email: westley@sylabs.io
-# Date: Jul 5, 2018
-# Version-1.1
+# Date: Jul 6, 2018
+# Version-1.2
 # https://github.com/WestleyK/backlight-adjust
 #
 
@@ -14,6 +14,8 @@ if [[ -n $input_blk ]]; then
 			echo "Usage: backlight-adjust [-option]
 	-h | -help | --help (display help menu)
 	15-255 | -15--255 (adjust backlight from 15 to 255)
+	-s (enter sleep mode)
+	-n (turns on backlight to 200)
 	-b (adjust below 15)
 	-p (adjust thrught 10-100%)
 	-d (desplay current brightness from 0-255)"
@@ -21,6 +23,12 @@ if [[ -n $input_blk ]]; then
 			;;
 		*[0-9]*)
 			bright="true"
+			;;
+		-s)
+			sleep_mode="true"
+			;;
+		-n)
+			blk_on="true"
 			;;
 		-b)
 			echo "this feature is comming soon!"
@@ -56,6 +64,23 @@ if [[ $bright == "true" ]]; then
 		exit
 	fi
 	sudo bash -c "echo $input_blk > /sys/class/backlight/rpi_backlight/brightness"
+	exit
+fi
+
+if [[ $sleep_mode == "true" ]]; then
+	was_bright=$( cat /sys/class/backlight/rpi_backlight/brightness )
+	echo "Press any key to exit this mode"
+	sleep 2s
+	sudo bash -c "echo 1 > /sys/class/backlight/rpi_backlight/bl_power"
+	read -p "" -n 1 -r
+	echo
+	sudo bash -c "echo 0 > /sys/class/backlight/rpi_backlight/bl_power"
+	exit
+fi
+
+if [[ $blk_on == "true" ]]; then
+	sudo bash -c "echo 0 > /sys/class/backlight/rpi_backlight/bl_power"
+	sudo bash -c "echo 200 > /sys/class/backlight/rpi_backlight/brightness"
 	exit
 fi
 
