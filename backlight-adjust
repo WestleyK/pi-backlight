@@ -18,7 +18,8 @@ if [[ -n $input_blk ]]; then
 	-n (turns on backlight to 200)
 	-b (adjust below 15)
 	-p (adjust thrught 10-100%)
-	-d (desplay current brightness from 0-255)"
+	-d (desplay current brightness from 0-255)
+	-v | -version | --version (desplays version)"
 			exit
 			;;
 		*[0-9]*)
@@ -40,6 +41,10 @@ if [[ -n $input_blk ]]; then
 			;;
 		-d)
 			display="true"
+			;;
+		-v | -version | --version)
+			echo "Version-1.2"
+			exit
 			;;
 		*)
 			echo "Option not found!"
