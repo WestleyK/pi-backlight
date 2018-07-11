@@ -1,4 +1,4 @@
-# Simple shell script for adjusting backlight
+# Simple perl script for adjusting backlight
 
 Designed and tested for raspberry pi. <br>
  <br>
@@ -23,6 +23,11 @@ For sleep mode: <br>
 <br>
 Help menu: <br>
 `$ pi-brightness -help` <br>
+<br>
+
+
+Feel free to modify this :) <br>
+Any issues or feature request please let me know! <br>
 <br>
 
 <br>
