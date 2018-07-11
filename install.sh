@@ -2,11 +2,14 @@
 #
 # Created by: Westley K
 # Date: Jul 5, 2018
-# version-10
+# version-1.2
 # https://github.com/WestleyK/backlight-adjuster
 #
 # this install script must be runed as root or sudo
 # sudo ./install.sh
+
+
+INSTALL_PATH="/usr/local/bin"
 
 
 # check if your root
@@ -49,7 +52,7 @@ echo
 
 # check if we need to un-install
 if [[ $un_install == "true" ]]; then
-	check_script=$( ls /usr/bin | grep backlight-adjust )
+	check_script=$( ls $INSTALL_PATH | grep backlight-adjust )
 	if [[ -z $check_script ]]; then
 		echo "nothing to un-install"
 		exit
@@ -60,7 +63,7 @@ if [[ $un_install == "true" ]]; then
 	echo
 	if [[ $input == "y" || $input == "Y" ]]; then
 		echo "un-installing..."
-		sudo rm /usr/bin/backlight-adjust
+		sudo rm $INSTALL_PATH/backlight-adjust
 		echo "un-installed"
 		exit
 	fi
@@ -68,7 +71,7 @@ fi
 
 
 # check if its installed aready
-check_script=$( ls /usr/bin | grep backlight-adjust )
+check_script=$( ls $INSTALL_PATH | grep backlight-adjust )
 if [[ -n $check_script ]]; then 
 	echo "it seems like its already installed"
 	exit
@@ -84,7 +87,7 @@ echo "Installing..."
 
 # the install part
 sudo chmod +x backlight-adjust
-sudo cp backlight-adjust /usr/bin
+sudo cp backlight-adjust $INSTALL_PATH
 
 echo "Installed!"
 echo
