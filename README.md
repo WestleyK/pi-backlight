@@ -15,14 +15,15 @@ To uninstall: <br>
 
 ## How to use:
 
-`$ backlight-adjust [15-255]` <br>
-`$ backlight-adjust` <br>
+`$ pi-brightness [15-255]` <br>
+`$ pi-brightness` <br>
 <br>
-
+For sleep mode: <br>
+`$ pi-brightness -s` <br>
+<br>
 Help menu: <br>
-`$ backlight-adjust -help` <br>
+`$ pi-brightness -help` <br>
 <br>
-
 
 <br>
 
