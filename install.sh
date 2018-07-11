@@ -35,7 +35,7 @@ if [[ -n $option ]]; then
 			exit
 			;;
 		-u)
-			un_install=$"true"
+			un_install="true"
 			echo "Un-installing"
 			;;
 		*)
@@ -53,7 +53,7 @@ echo
 
 # check if we need to un-install
 if [[ $un_install == "true" ]]; then
-	check_script=$( ls $INSTALL_PATH | grep backlight-adjust )
+	check_script=$( ls $INSTALL_PATH | grep $SCRIPT_NAME )
 	if [[ -z $check_script ]]; then
 		echo "Nothing to un-install"
 		exit
@@ -79,7 +79,7 @@ if [[ -n $check_script ]]; then
 fi
 
 # check if the script is still here
-check_script=$( ls | grep ^$SCRIPT_NAME$ )
+check_script=$( ls | grep $SCRIPT_NAME )
 if [[ -z $check_script ]]; then 
 	echo "No script to install."
 	exit
