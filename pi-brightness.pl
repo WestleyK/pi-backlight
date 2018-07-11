@@ -4,7 +4,7 @@
 # Email: westley@sylabs.io
 # Date Jul 11, 2018
 # https://github.com/WestleyK/backlight-adjust
-# Version-1.0-beta
+# Version-1.0-beta-2
 
 
 
@@ -12,13 +12,20 @@
 #use warnings;
 
 
-$VERSION_SCRIPT = "version-1.0-beta\n";
+$VERSION_SCRIPT = "version-1.0-beta-2\n";
 
 $FILE_BRIGHT = "/tmp/backlight_brightness.txt";
 $FILE_DISP_ON = "/tmp/backlight_power.txt";
 
 $OPTION = "$ARGV[0]\n";
+$ONE_OPTION = "$ARGV[1]";
 
+
+if ($ONE_OPTION ne "") {
+	print "Only one argument!\n";
+	print "Try: <command> -help\n";
+	exit
+}
 
 if ($OPTION ne "\n") {
 	
@@ -28,6 +35,8 @@ if ($OPTION ne "\n") {
 		$OPT_S = "true"
 	} elsif ($OPTION eq "-d\n") {
 		$OPT_D = "true";
+	} elsif ($OPTION eq "-n\n" || $OPTION eq "-on\n") {
+		$OPT_N = "true";
 	} elsif ($OPTION eq "-v\n" || $OPTION eq "-version\n" || $OPTION eq "--version\n") {
 		$OPT_V = "true";
 	} elsif ($OPTION =~ /[0-9]/) {
@@ -49,6 +58,7 @@ if ($OPT_H eq "true") {
 	15-255 (adjust from 15 to 255)
 	-s | -sleep (enter sleep mode)
 	-d (print currnt brightness, scale:[15-255])
+	-n | -on (turns backlight on to 200)
 	-v | -version | --version (print version)\n";
 	exit;
 }
@@ -65,6 +75,12 @@ if ($OPT_S eq "true") {
 if ($OPT_D eq "true") {
 	print "Scale:[15-255]:\n";
 	system("cat /sys/class/backlight/rpi_backlight/brightness");
+	exit;
+}
+
+if ($OPT_N eq "true") {
+	system("sudo bash -c 'echo 0 > /sys/class/backlight/rpi_backlight/bl_power'");
+	system("sudo bash -c 'echo 200 > /sys/class/backlight/rpi_backlight/brightness'");
 	exit;
 }
 
