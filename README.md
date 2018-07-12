@@ -31,15 +31,17 @@ To uninstall: <br>
 <br>
 
 ```
-pi@raspberrypi:~ $ pi-backlight -h
+pi@raspberrypi:~ $ pi-backlight -help
 Usage: pi-backlight [option]
-        -h | -help | --help (print help menu)
-        15-255 (adjust from 15 to 255)
-        -s | -sleep (enter sleep mode)
-        -d (print currnt brightness, scale:[15-255])
-        -n | -on (turns backlight on to 200)
-        -v | -version | --version (print version)
-pi@raspberrypi:~ $  
+	-h | -help | --help (print help menu)
+	15-255 (adjust from 15 to 255)
+	-u | -up (brighter by 30)
+	-d | -down (lower by 30)
+	-s | -sleep (enter sleep mode)
+	-c (print currnt brightness, scale:[15-255])
+	-n | -on (turns backlight on to 200)
+	-v | -version | --version (print version)
+pi@raspberrypi:~ $ 
 ```
 
 <br>
@@ -52,6 +54,13 @@ Where `XXX` is any whole number from `15` to `255`, for example: <br>
 And of corse, sleep mode: <br>
 `$ pi-backlight -s` <br>
 Sleep mode will turn off the display backlight until you push \<ENTER\> <br>
+<br>
+You can also use the `-up` and `-down` option: <br>
+`$ pi-backlight -u` Or: <br>
+`$ pi-backlight -up` To adjust backlight highter, <br>
+And to adjust backlight down: <br>
+`$ pi-backlight -d` Or: <br>
+`$ pi-backlight -down` To adjust backlight lower. <br>
 <br>
 
 
