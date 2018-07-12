@@ -10,21 +10,25 @@ First download if you didn't already: <br>
 Then `cd` to `pi-backlight` and: <br>
 `$ sudo ./install.sh` <br>
 <br>
-The full commands will look like this: <br>
+The full commands will look like this: 
+
 ```
 git clone https://github.com/WestleyK/pi-backlight.git
 cd pi-backlight/
 sudo ./install.sh
 ```
-<br>
-<br>
-To uninstall:
-`$ sudo ./install.sh -u` <br>
 
 <br>
+
+To uninstall: <br>
+`$ sudo ./install.sh -u` <br>
+
+<br/>
 
 
 ## Usage:
+
+<br>
 
 ```
 pi@raspberrypi:~ $ pi-backlight -h
@@ -37,16 +41,20 @@ Usage: pi-backlight [option]
         -v | -version | --version (print version)
 pi@raspberrypi:~ $  
 ```
+
 <br>
-Quick brightness adjust:<br>
-`$ pi-backlight XXX`<br>
-Where `XXX` is any whole number from 15 to 255, for example:<br>
-`$ pi-backlight 200`<br>
+
+Quick brightness adjust: <br>
+`$ pi-backlight XXX` <br>
+Where `XXX` is any whole number from `15` to `255`, for example: <br>
+`$ pi-backlight 200` <br>
 <br>
-And of corse, sleep mode:  
-`$ pi-backlight -s`  
-Sleep mode will turn off the display backlight until you push <ENTER>  
-  
+And of corse, sleep mode: <br>
+`$ pi-backlight -s` <br>
+Sleep mode will turn off the display backlight until you push \<ENTER\> <br>
+<br>
+
+
 
 <br>
 Feel free to modify this :) <br>
@@ -55,6 +63,6 @@ Any issues or feature request please let me know! <br>
 
 <br>
 
-### End README
+## End README
 
 <br>
