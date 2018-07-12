@@ -1,6 +1,6 @@
-# Simple perl script for adjusting backlight
+# Simple perl script for crude sleep mode/low power mode and for adjusting backlight
 
-Designed and tested for raspberry pi. <br>
+Designed and tested for raspberry pi with official 7 inch touchdcreen. <br>
 <br>
 
 ## Install:
