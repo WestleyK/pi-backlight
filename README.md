@@ -18,8 +18,9 @@ sudo ./install.sh
 ```
 <br>
 <br>
-To uninstall: <br>
+To uninstall:
 `$ sudo ./install.sh -u` <br>
+
 <br>
 
 
@@ -37,15 +38,15 @@ Usage: pi-backlight [option]
 pi@raspberrypi:~ $  
 ```
 <br>
-Quick brightness adjust: <br>
-`$ pi-backlight XXX` <br>
-Where `XXX` is any whole number from 15 to 255, for example: <br>
-`$ pi-backlight 200` <br>
+Quick brightness adjust:<br>
+`$ pi-backlight XXX`<br>
+Where `XXX` is any whole number from 15 to 255, for example:<br>
+`$ pi-backlight 200`<br>
 <br>
-And of corse, sleep mode: <br>
-`$ pi-backlight -s` <br>
-Sleep mode will turn off the display backlight until you push <ENTER> <br>
-<br>
+And of corse, sleep mode:  
+`$ pi-backlight -s`  
+Sleep mode will turn off the display backlight until you push <ENTER>  
+  
 
 <br>
 Feel free to modify this :) <br>
