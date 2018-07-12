@@ -4,10 +4,10 @@
 # Email: westley@sylabs.io
 # Date Jul 11, 2018
 # https://github.com/WestleyK/pi-backlight
-# Version-1.0-beta-2
+# Version-1.0
 
 
-$VERSION_SCRIPT = "version-1.0-beta-2\n";
+$VERSION_SCRIPT = "version-1.0\n";
 
 $FILE_BRIGHT = "/tmp/backlight_brightness.txt";
 $FILE_DISP_ON = "/tmp/backlight_power.txt";
@@ -18,7 +18,7 @@ $ONE_OPTION = "$ARGV[1]";
 
 if ($ONE_OPTION ne "") {
 	print "Only one argument!\n";
-	print "Try: <command> -help\n";
+	print "Try: pi-backlight -help\n";
 	exit
 }
 
@@ -39,7 +39,7 @@ if ($OPTION ne "\n") {
 		$BRIGHT = $OPTION;
 	} else {
 		print "Option not found!\n";
-		print "Try: <command> -help\n";
+		print "Try: pi-backlight -help\n";
 		exit;
 	}
 
@@ -48,7 +48,7 @@ if ($OPTION ne "\n") {
 
 
 if ($OPT_H eq "true") {
-	print "Usage: <command> [option]
+	print "Usage: pi-backlight [option]
 	-h | -help | --help (print help menu)
 	15-255 (adjust from 15 to 255)
 	-s | -sleep (enter sleep mode)
