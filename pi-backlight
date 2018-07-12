@@ -4,10 +4,10 @@
 # Email: westley@sylabs.io
 # Date Jul 12, 2018
 # https://github.com/WestleyK/pi-backlight
-# Version-1.2
+# Version-1.3
 
 
-$VERSION_SCRIPT = "version-1.2\n";
+$VERSION_SCRIPT = "version-1.3\n";
 
 $FILE_BRIGHT = "/tmp/backlight_brightness.txt";
 $FILE_DISP_ON = "/tmp/backlight_power.txt";
@@ -141,6 +141,10 @@ if ($OPT_V eq "true") {
 }
 
 if ($ADJ eq "true") {
+	if ($BRIGHT =~ /\./ ) {
+		print("Only whole numbers!\n");
+		exit
+	}
 	if (($BRIGHT >= 15) && ($BRIGHT <= 255)) {
 		open($LIGHT_FILE, '>', $FILE_BRIGHT);
 		print $LIGHT_FILE $BRIGHT;
@@ -155,6 +159,10 @@ if ($ADJ eq "true") {
 
 print "[15-255]:";
 $BRIGHT = <STDIN>;
+if ($BRIGHT =~ /\./ ) {
+	print("Only whole numbers!\n");
+	exit
+}
 if (($BRIGHT >= 15) && ($BRIGHT <= 255)) {
 	open($LIGHT_FILE, '>', $FILE_BRIGHT);
 	print $LIGHT_FILE $BRIGHT;
