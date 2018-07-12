@@ -2,15 +2,18 @@
 #
 # Created bt: Westley K
 # Email: westley@sylabs.io
-# Date Jul 11, 2018
+# Date Jul 12, 2018
 # https://github.com/WestleyK/pi-backlight
-# Version-1.0
+# Version-1.2
 
 
-$VERSION_SCRIPT = "version-1.0\n";
+$VERSION_SCRIPT = "version-1.2\n";
 
 $FILE_BRIGHT = "/tmp/backlight_brightness.txt";
 $FILE_DISP_ON = "/tmp/backlight_power.txt";
+$FILE_CURRENT = "/sys/class/backlight/rpi_backlight/brightness";
+$STEP_UP = "30";
+$STEP_DOWN = "30";
 
 $OPTION = "$ARGV[0]\n";
 $ONE_OPTION = "$ARGV[1]";
@@ -26,10 +29,14 @@ if ($OPTION ne "\n") {
 	
 	if ($OPTION eq "-h\n" || $OPTION eq "-help\n" || $OPTION eq "--help\n") {
 		$OPT_H = "true";
+	} elsif ($OPTION eq "-u\n" || $OPTION eq "-up\n") {
+		$OPT_U = "true";
+	} elsif ($OPTION eq "-d\n" || $OPTION eq "-down\n") {
+		$OPT_D = "true";
 	} elsif ($OPTION eq "-s\n" || $OPTION eq "-sleep\n") {
 		$OPT_S = "true"
-	} elsif ($OPTION eq "-d\n") {
-		$OPT_D = "true";
+	} elsif ($OPTION eq "-c\n") {
+		$OPT_C = "true";
 	} elsif ($OPTION eq "-n\n" || $OPTION eq "-on\n") {
 		$OPT_N = "true";
 	} elsif ($OPTION eq "-v\n" || $OPTION eq "-version\n" || $OPTION eq "--version\n") {
@@ -51,11 +58,60 @@ if ($OPT_H eq "true") {
 	print "Usage: pi-backlight [option]
 	-h | -help | --help (print help menu)
 	15-255 (adjust from 15 to 255)
+	-u | -up (brighter by 20)
+	-d | -down (lower by 20)
 	-s | -sleep (enter sleep mode)
-	-d (print currnt brightness, scale:[15-255])
+	-c (print currnt brightness, scale:[15-255])
 	-n | -on (turns backlight on to 200)
 	-v | -version | --version (print version)\n";
 	exit;
+}
+
+if ($OPT_U eq "true") {
+	open(my $CURRENT_BRIGHTNESS, '<', $FILE_CURRENT);
+	$CONTENT = <$CURRENT_BRIGHTNESS>;
+	close($CURRENT_BRIGHTNESS);
+	$CONTENT += $STEP_UP;
+	if ($CONTENT >= 255) {
+		print("Max brightness!\n");
+		$CONTENT = 255;
+		open($LIGHT_FILE, '>', $FILE_BRIGHT);
+		print $LIGHT_FILE $CONTENT;
+		close $LIGHT_FILE;
+		print("Current brightness: $CONTENT\n");
+		system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
+		exit;
+	}
+	open($LIGHT_FILE, '>', $FILE_BRIGHT);
+	print $LIGHT_FILE $CONTENT;
+	close $LIGHT_FILE;
+	print("Current brightness: $CONTENT\n");
+	system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
+	exit;
+}
+
+if ($OPT_D eq "true") {
+	open(my $CURRENT_BRIGHTNESS, '<', $FILE_CURRENT);
+	$CONTENT = <$CURRENT_BRIGHTNESS>;
+	close($CURRENT_BRIGHTNESS);
+	$CONTENT -= $STEP_DOWN;
+	if ($CONTENT <= 15) {
+		print("Min brightness!\n");
+		$CONTENT = 15;
+		open($LIGHT_FILE, '>', $FILE_BRIGHT);
+		print $LIGHT_FILE $CONTENT;
+		close $LIGHT_FILE;
+		print("Current brightness: $CONTENT\n");
+		system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
+		exit;
+	}
+	open($LIGHT_FILE, '>', $FILE_BRIGHT);
+	print $LIGHT_FILE $CONTENT;
+	close $LIGHT_FILE;
+	print("Current brightness: $CONTENT\n");
+	system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
+	exit;
+
 }
 
 if ($OPT_S eq "true") {
@@ -67,7 +123,7 @@ if ($OPT_S eq "true") {
 	exit;
 }
 
-if ($OPT_D eq "true") {
+if ($OPT_C eq "true") {
 	print "Scale:[15-255]:\n";
 	system("cat /sys/class/backlight/rpi_backlight/brightness");
 	exit;
