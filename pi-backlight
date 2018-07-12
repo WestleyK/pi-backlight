@@ -58,8 +58,8 @@ if ($OPT_H eq "true") {
 	print "Usage: pi-backlight [option]
 	-h | -help | --help (print help menu)
 	15-255 (adjust from 15 to 255)
-	-u | -up (brighter by 20)
-	-d | -down (lower by 20)
+	-u | -up (brighter by 30)
+	-d | -down (lower by 30)
 	-s | -sleep (enter sleep mode)
 	-c (print currnt brightness, scale:[15-255])
 	-n | -on (turns backlight on to 200)
