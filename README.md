@@ -20,8 +20,14 @@ sudo ./install.sh
 
 <br>
 
+To update the command and repo, do: <br>
+`$ sudo ./install.sh -update` <br>
+This will update the existing command if there is one. <br>
+
+<br>
+
 To uninstall: <br>
-`$ sudo ./install.sh -u` <br>
+`$ sudo ./install.sh -uninstall` <br>
 
 <br/>
 
