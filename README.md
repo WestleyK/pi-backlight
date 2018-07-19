@@ -47,6 +47,7 @@ Usage: pi-backlight [option]
 	-c (print currnt brightness, scale:[15-255])
 	-n | -on (turns backlight on to 200)
 	-v | -version | --version (print version)
+source code: https://github.com/WestleyK/pi-backlight
 pi@raspberrypi:~ $ 
 ```
 
