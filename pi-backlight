@@ -63,7 +63,8 @@ if ($OPT_H eq "true") {
 	-s | -sleep (enter sleep mode)
 	-c (print currnt brightness, scale:[15-255])
 	-n | -on (turns backlight on to 200)
-	-v | -version | --version (print version)\n";
+	-v | -version | --version (print version)
+source code: https://github.com/WestleyK/pi-backlight \n";
 	exit;
 }
 
