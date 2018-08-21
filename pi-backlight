@@ -3,7 +3,7 @@
 # Created by: Westley K
 # email: westley@sylabs.io
 # Date: Aug 21, 2018
-# version-1.4.3
+# version-1.4.4
 # https://github.com/WestleyK/pi-backlight
 #
 # MIT License
@@ -123,7 +123,7 @@ sub current_bright() {
     $CONTENT_CURRENT = <$CURRENT_BRIGHTNESS_CURRENT>;
     close($CURRENT_BRIGHTNESS_CURRENT);
     print "Current brightness: ";
-    print "$CONTENT_CURRENT\n";
+    print "$CONTENT_CURRENT";
     exit 0;
 }
 
@@ -235,7 +235,8 @@ if ($OPTION ne "") {
         $BRIGHT = $OPTION;
         adjust_brightness();
     } else {
-        print "Option not found!\n";
+        print "Option not found:  ";
+        print "$OPTION\n";
         print "Try:  \$ pi-backlight -help\n";
         exit 1;
     }
