@@ -3,7 +3,7 @@
 # Created by: Westley K
 # email: westley@sylabs.io
 # Date: Aug 20, 2018
-# version-1.4.0
+# version-1.4.1
 # https://github.com/WestleyK/pi-backlight
 #
 # MIT License
@@ -31,14 +31,18 @@
 
 
 
-$VERSION_SCRIPT = "version-1.4.0\n";
+$VERSION_SCRIPT = "version-1.4.1\n";
 $SCRIPT_DATE = "Aug 20, 2018\n";
 
 $FILE_BRIGHT = "/tmp/backlight_brightness.txt";
 $FILE_DISP_ON = "/tmp/backlight_power.txt";
 $BRIGHTNESS_FILE = "/sys/class/backlight/rpi_backlight/brightness";
-$STEP_UP = "30";
-$STEP_DOWN = "30";
+$BACKLIGHT_POWER = "/sys/class/backlight/rpi_backlight/bl_power";
+$DEFALT_ON = "200";
+$MAX_BRIGHTNESS = "255";
+$MIN_BRIGHTNESS = "15";
+$STEP_UP = "25";
+$STEP_DOWN = "25";
 
 $OPTION = "$ARGV[0]";
 $ONE_OPTION = "$ARGV[1]";
@@ -53,12 +57,12 @@ if ($ONE_OPTION ne "") {
 sub help_menu() {
 	print "Usage: pi-backlight [option]\n";
 	print "        -h | -help | --help (print help menu)\n";
-	print "        15-255 (adjust from 15 to 255)\n";
-	print "        -u | -up (brighter by 30)\n";
-	print "        -d | -down (lower by 30)\n";
+	print "        [$MIN_BRIGHTNESS-$MAX_BRIGHTNESS] (adjust from: $MIN_BRIGHTNESS to: $MAX_BRIGHTNESS)\n";
+	print "        -u | -up (brighter by: $STEP_UP)\n";
+	print "        -d | -down (lower by: $STEP_DOWN)\n";
 	print "        -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)\n";
-	print "        -c (print currnt brightness, scale:[15-255])\n";
-	print "        -n | -on (turns backlight on to 200)\n";
+	print "        -c (print currnt brightness, scale:[$MIN_BRIGHTNESS-$MAX_BRIGHTNESS])\n";
+	print "        -n | -on (turns backlight on to: $DEFALT_ON)\n";
     print "        -i | -info (print script info)\n";
 	print "        -v | -version | --version (print version)\n";
     print "source code: https://github.com/WestleyK/pi-backlight \n";
@@ -83,10 +87,30 @@ sub file_exist_brightness() {
         print "$BRIGHTNESS_FILE\n";
         exit 1;
     }
+    if ($only_exist eq "1") {
+        return;
+    }
     if ( ! -w $BRIGHTNESS_FILE) {
         print "\033[0;31mERROR: \033[0m";
         print "File not writable:\n";
         print "$BRIGHTNESS_FILE\n";
+        print "Try  $ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
+        exit 1;
+
+    }
+}
+
+sub file_exist_power() {
+    if ( ! -e $BACKLIGHT_POWER) {
+        print "\033[0;31mERROR: \033[0m";
+        print "File does not exist:\n";
+        print "$BACKLIGHT_POWER\n";
+        exit 1;
+    }
+    if ( ! -w $BACKLIGHT_POWER) {
+        print "\033[0;31mERROR: \033[0m";
+        print "File not writable:\n";
+        print "$BACKLIGHT_POWER\n";
         print "Try  $ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
         exit 1;
 
@@ -123,27 +147,26 @@ if ($OPTION ne "") {
 
 }
 
+sub new_bright() {
+    open(my $LIGHT_FILE, '>', $BRIGHTNESS_FILE);
+    print $LIGHT_FILE $CONTENT;
+    close $LIGHT_FILE;
+    print("Current brightness: $CONTENT\n");
+    exit 0;
+}
+
 sub adjust_up() {
     file_exist_brightness();
 	open(my $CURRENT_BRIGHTNESS, '<', $BRIGHTNESS_FILE);
 	$CONTENT = <$CURRENT_BRIGHTNESS>;
-	close($CURRENT_BRIGHTNESS);
+    close($CURRENT_BRIGHTNESS);
 	$CONTENT += $STEP_UP;
-	if ($CONTENT >= 255) {
+	if ($CONTENT >= $MAX_BRIGHTNESS) {
 		print("Max brightness!\n");
-		$CONTENT = 255;
-		open($LIGHT_FILE, '>', $FILE_BRIGHT);
-		print $LIGHT_FILE $CONTENT;
-		close $LIGHT_FILE;
-		print("Current brightness: $CONTENT\n");
-		system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
-		exit 0;
+        $CONTENT = $MAX_BRIGHTNESS;
+        new_bright();
 	}
-	open($LIGHT_FILE, '>', $FILE_BRIGHT);
-	print $LIGHT_FILE $CONTENT;
-	close $LIGHT_FILE;
-	print("Current brightness: $CONTENT\n");
-	system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
+    new_bright();
 	exit 0;
 }
 
@@ -153,39 +176,38 @@ sub adjust_down() {
 	$CONTENT = <$CURRENT_BRIGHTNESS>;
 	close($CURRENT_BRIGHTNESS);
 	$CONTENT -= $STEP_DOWN;
-	if ($CONTENT <= 15) {
+	if ($CONTENT <= $MIN_BRIGHTNESS) {
 		print("Min brightness!\n");
-		$CONTENT = 15;
-		open($LIGHT_FILE, '>', $FILE_BRIGHT);
-		print $LIGHT_FILE $CONTENT;
-		close $LIGHT_FILE;
-		print("Current brightness: $CONTENT\n");
-		system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
-		exit 0;
+		$CONTENT = $MIN_BRIGHTNESS;
+        new_bright();
 	}
-	open($LIGHT_FILE, '>', $FILE_BRIGHT);
-	print $LIGHT_FILE $CONTENT;
-	close $LIGHT_FILE;
-	print("Current brightness: $CONTENT\n");
-	system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
+    new_bright();
 	exit 0;
 
 }
 
 sub sleep_mode() {
-    file_exist_brightness();
+    file_exist_power();
 	print "Press <ENTER> to exit this mode.\n";
-	sleep(2);
-	system("sudo bash -c 'echo 1 > /sys/class/backlight/rpi_backlight/bl_power'");
+	sleep(1);
+    open(my $DYSPLAY_POWER, '>', $BACKLIGHT_POWER);
+    print $DYSPLAY_POWER "1";
+	close($DYSPLAY_POWER);
 	$STOP = <STDIN>;
-	system("sudo bash -c 'echo 0 > /sys/class/backlight/rpi_backlight/bl_power'");
+    open(my $DYSPLAY_POWER, '>', $BACKLIGHT_POWER);
+    print $DYSPLAY_POWER "0";
+	close($DYSPLAY_POWER);
 	exit 0;
 }
 
 sub current_bright() {
+    $only_exist = "1";
     file_exist_brightness();
-	print "Scale:[15-255]:\n";
-	system("cat /sys/class/backlight/rpi_backlight/brightness");
+    open(my $CURRENT_BRIGHTNESS, '<', $BRIGHTNESS_FILE);
+	$CONTENT = <$CURRENT_BRIGHTNESS>;
+	close($CURRENT_BRIGHTNESS);
+	print "Current brightness [$MIN_BRIGHTNESS-$MAX_BRIGHTNESS]:\n";
+    print "$CONTENT";
 	exit 0;
 }
 
@@ -197,12 +219,12 @@ sub turn_on() {
 
 sub adjust_brightness() {
     file_exist_brightness();
-	if ($BRIGHT =~ /\./ ) {
-		print("Only whole numbers!\n");
-		exit 1
-	}
-	if (($BRIGHT >= 15) && ($BRIGHT <= 255)) {
-		open($LIGHT_FILE, '>', $FILE_BRIGHT);
+    if ($BRIGHT =~ /\./ ) {
+        print("Only whole numbers!\n");
+        exit 1
+    }
+    if (($BRIGHT >= 15) && ($BRIGHT <= 255)) {
+        open($LIGHT_FILE, '>', $FILE_BRIGHT);
 		print $LIGHT_FILE $BRIGHT;
 		close $LIGHT_FILE;
 		system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
@@ -213,7 +235,6 @@ sub adjust_brightness() {
 	}
 }
 
-file_exist_brightness();
 print "[15-255]:";
 $BRIGHT = <STDIN>;
 if ($BRIGHT =~ /\./ ) {
@@ -224,6 +245,7 @@ if (($BRIGHT >= 15) && ($BRIGHT <= 255)) {
 	open($LIGHT_FILE, '>', $FILE_BRIGHT);
 	print $LIGHT_FILE $BRIGHT;
 	close $LIGHT_FILE;
+    file_exist_brightness();
 	system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
     exit 0;
 } else {
