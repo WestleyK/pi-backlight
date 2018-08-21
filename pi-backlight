@@ -2,8 +2,8 @@
 #
 # Created by: Westley K
 # email: westley@sylabs.io
-# Date: Aug 20, 2018
-# version-1.4.1
+# Date: Aug 21, 2018
+# version-1.4.3
 # https://github.com/WestleyK/pi-backlight
 #
 # MIT License
@@ -31,14 +31,14 @@
 
 
 
-$VERSION_SCRIPT = "version-1.4.1\n";
-$SCRIPT_DATE = "Aug 20, 2018\n";
+$VERSION_SCRIPT = "version-1.4.3\n";
+$SCRIPT_DATE = "Aug 21, 2018\n";
 
 $FILE_BRIGHT = "/tmp/backlight_brightness.txt";
 $FILE_DISP_ON = "/tmp/backlight_power.txt";
 $BRIGHTNESS_FILE = "/sys/class/backlight/rpi_backlight/brightness";
 $BACKLIGHT_POWER = "/sys/class/backlight/rpi_backlight/bl_power";
-$DEFALT_ON = "200";
+$DEFALT_ON = "180";
 $MAX_BRIGHTNESS = "255";
 $MIN_BRIGHTNESS = "15";
 $STEP_UP = "25";
@@ -49,24 +49,25 @@ $ONE_OPTION = "$ARGV[1]";
 
 
 if ($ONE_OPTION ne "") {
-	print "Only one argument!\n";
-	print "Try:  \$ pi-backlight -help\n";
-	exit 1;
+    print "\033[0;31mERROR: \033[0m";
+    print "Only one argument!\n";
+    print "Try:  \$ pi-backlight -help\n";
+    exit 1;
 }
 
 sub help_menu() {
-	print "Usage: pi-backlight [option]\n";
-	print "        -h | -help | --help (print help menu)\n";
-	print "        [$MIN_BRIGHTNESS-$MAX_BRIGHTNESS] (adjust from: $MIN_BRIGHTNESS to: $MAX_BRIGHTNESS)\n";
-	print "        -u | -up (brighter by: $STEP_UP)\n";
-	print "        -d | -down (lower by: $STEP_DOWN)\n";
-	print "        -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)\n";
-	print "        -c (print currnt brightness, scale:[$MIN_BRIGHTNESS-$MAX_BRIGHTNESS])\n";
-	print "        -n | -on (turns backlight on to: $DEFALT_ON)\n";
+    print "Usage: pi-backlight [option]\n";
+    print "        -h | -help | --help (print help menu)\n";
+    print "        [$MIN_BRIGHTNESS-$MAX_BRIGHTNESS] (adjust from: $MIN_BRIGHTNESS to: $MAX_BRIGHTNESS)\n";
+    print "        -u | -up (brighter by: $STEP_UP)\n";
+    print "        -d | -down (lower by: $STEP_DOWN)\n";
+    print "        -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)\n";
+    print "        -c (print currnt brightness, scale:[$MIN_BRIGHTNESS-$MAX_BRIGHTNESS])\n";
+    print "        -n | -on (turns backlight on to: $DEFALT_ON)\n";
     print "        -i | -info (print script info)\n";
-	print "        -v | -version | --version (print version)\n";
+    print "        -v | -version | --version (print version)\n";
     print "source code: https://github.com/WestleyK/pi-backlight \n";
-	exit 0;
+    exit 0;
 }
 
 sub version_print() {
@@ -96,7 +97,6 @@ sub file_exist_brightness() {
         print "$BRIGHTNESS_FILE\n";
         print "Try  \$ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
         exit 1;
-
     }
 }
 
@@ -113,145 +113,166 @@ sub file_exist_power() {
         print "$BACKLIGHT_POWER\n";
         print "Try  \$ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
         exit 1;
-
     }
 }
 
-if ($OPTION ne "") {
-	
-	if ($OPTION eq "-h" || $OPTION eq "-help" || $OPTION eq "--help") {
-        help_menu();
-	} elsif ($OPTION eq "-u" || $OPTION eq "-up") {
-        adjust_up();
-	} elsif ($OPTION eq "-d" || $OPTION eq "-down") {
-        adjust_down();
-	} elsif ($OPTION eq "-s" || $OPTION eq "-sleep") {
-        sleep_mode();
-	} elsif ($OPTION eq "-c") {
-		current_bright();
-	} elsif ($OPTION eq "-n" || $OPTION eq "-on") {
-		turn_on();
-    } elsif ($OPTION eq "-i" || $OPTION eq "-info" ) {
-        info_print();
-	} elsif ($OPTION eq "-v" || $OPTION eq "-version" || $OPTION eq "--version") {
-        version_print();
-	} elsif ($OPTION =~ /[0-9]/) {
-		adjust_brightness();
-		$BRIGHT = $OPTION;
-	} else {
-		print "Option not found!\n";
-		print "Try:  \$ pi-backlight -help\n";
-		exit 1;
-	}
-
-
+sub current_bright() {
+    $only_exist = "1";
+    file_exist_brightness();
+    open(my $CURRENT_BRIGHTNESS_CURRENT, '<', $BRIGHTNESS_FILE);
+    $CONTENT_CURRENT = <$CURRENT_BRIGHTNESS_CURRENT>;
+    close($CURRENT_BRIGHTNESS_CURRENT);
+    print "Current brightness: ";
+    print "$CONTENT_CURRENT\n";
+    exit 0;
 }
 
 sub new_bright() {
     open(my $LIGHT_FILE, '>', $BRIGHTNESS_FILE);
     print $LIGHT_FILE $CONTENT;
     close $LIGHT_FILE;
-    print("Current brightness: $CONTENT\n");
+    current_bright();
     exit 0;
 }
 
 sub adjust_up() {
     file_exist_brightness();
-	open(my $CURRENT_BRIGHTNESS, '<', $BRIGHTNESS_FILE);
-	$CONTENT = <$CURRENT_BRIGHTNESS>;
+    open(my $CURRENT_BRIGHTNESS, '<', $BRIGHTNESS_FILE);
+    $CONTENT = <$CURRENT_BRIGHTNESS>;
     close($CURRENT_BRIGHTNESS);
-	$CONTENT += $STEP_UP;
-	if ($CONTENT >= $MAX_BRIGHTNESS) {
-		print("Max brightness!\n");
+    $CONTENT += $STEP_UP;
+    if ($CONTENT >= $MAX_BRIGHTNESS) {
+        print "Max brightness!\n";
         $CONTENT = $MAX_BRIGHTNESS;
         new_bright();
-	}
+    }
     new_bright();
-	exit 0;
+    exit 0;
 }
 
 sub adjust_down() {
     file_exist_brightness();
-	open(my $CURRENT_BRIGHTNESS, '<', $BRIGHTNESS_FILE);
-	$CONTENT = <$CURRENT_BRIGHTNESS>;
-	close($CURRENT_BRIGHTNESS);
-	$CONTENT -= $STEP_DOWN;
-	if ($CONTENT <= $MIN_BRIGHTNESS) {
-		print("Min brightness!\n");
-		$CONTENT = $MIN_BRIGHTNESS;
+    open(my $CURRENT_BRIGHTNESS, '<', $BRIGHTNESS_FILE);
+    $CONTENT = <$CURRENT_BRIGHTNESS>;
+    close($CURRENT_BRIGHTNESS);
+    $CONTENT -= $STEP_DOWN;
+    if ($CONTENT <= $MIN_BRIGHTNESS) {
+        print "Min brightness!\n";
+        $CONTENT = $MIN_BRIGHTNESS;
         new_bright();
-	}
+    }
     new_bright();
-	exit 0;
-
+    exit 0;
 }
 
 sub sleep_mode() {
     file_exist_power();
-	print "Press <ENTER> to exit this mode.\n";
-	sleep(1);
+    print "Press <ENTER> to exit this mode:\n";
+    sleep(1);
     open(my $DYSPLAY_POWER, '>', $BACKLIGHT_POWER);
     print $DYSPLAY_POWER "1";
-	close($DYSPLAY_POWER);
-	$STOP = <STDIN>;
+    close($DYSPLAY_POWER);
+    $STOP = <STDIN>;
     open(my $DYSPLAY_POWER, '>', $BACKLIGHT_POWER);
     print $DYSPLAY_POWER "0";
-	close($DYSPLAY_POWER);
-	exit 0;
-}
-
-sub current_bright() {
-    $only_exist = "1";
-    file_exist_brightness();
-    open(my $CURRENT_BRIGHTNESS, '<', $BRIGHTNESS_FILE);
-	$CONTENT = <$CURRENT_BRIGHTNESS>;
-	close($CURRENT_BRIGHTNESS);
-	print "Current brightness [$MIN_BRIGHTNESS-$MAX_BRIGHTNESS]:\n";
-    print "$CONTENT";
-	exit 0;
+    close($DYSPLAY_POWER);
+    exit 0;
 }
 
 sub turn_on() {
-	system("sudo bash -c 'echo 0 > /sys/class/backlight/rpi_backlight/bl_power'");
-	system("sudo bash -c 'echo 200 > /sys/class/backlight/rpi_backlight/brightness'");
-	exit 0;
+    file_exist_power();
+    file_exist_brightness();
+    open(my $DYSPLAY_POWER, '>', $BACKLIGHT_POWER);
+    print $DYSPLAY_POWER "0";
+    close($DYSPLAY_POWER);
+    open(my $CURRENT_BRIGHTNESS, '>', $BRIGHTNESS_FILE);
+    print $CURRENT_BRIGHTNESS $DEFALT_ON;
+    close($CURRENT_BRIGHTNESS);
+    current_bright();
+    exit 0;
 }
 
 sub adjust_brightness() {
-    file_exist_brightness();
-    if ($BRIGHT =~ /\./ ) {
-        print("Only whole numbers!\n");
+    if ($BRIGHT !~ /^-?\d+$/ ) {
+        print "\033[0;31mERROR: \033[0m";
+        print "Only whole numbers!  $BRIGHT\n";
         exit 1
     }
-    if (($BRIGHT >= 15) && ($BRIGHT <= 255)) {
-        open($LIGHT_FILE, '>', $FILE_BRIGHT);
-		print $LIGHT_FILE $BRIGHT;
-		close $LIGHT_FILE;
-		system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
-		exit 0;
-	} else {
-		print "Not a valid number\n";
-		exit 1;
-	}
+    if (($BRIGHT >= $MIN_BRIGHTNESS) && ($BRIGHT <= $MAX_BRIGHTNESS)) {
+        file_exist_brightness();
+        open(my $CURRENT, '>', $BRIGHTNESS_FILE);
+        print $CURRENT $BRIGHT;
+        close($CURRENT);
+        current_bright();
+        exit 0;
+    } else {
+        print "\033[0;31mFATAL ERROR: \033[0m";
+        print "Not a valid number: ";
+        print "$BRIGHT\n";
+        exit 1;
+    }
 }
 
-print "[15-255]:";
-$BRIGHT = <STDIN>;
-if ($BRIGHT =~ /\./ ) {
-	print("Only whole numbers!\n");
-	exit 1;
+
+if ($OPTION ne "") {	
+    if ($OPTION eq "-h" || $OPTION eq "-help" || $OPTION eq "--help") {
+        help_menu();
+    } elsif ($OPTION eq "-u" || $OPTION eq "-up") {
+        adjust_up();
+    } elsif ($OPTION eq "-d" || $OPTION eq "-down") {
+        adjust_down();
+    } elsif ($OPTION eq "-s" || $OPTION eq "-sleep") {
+        sleep_mode();
+    } elsif ($OPTION eq "-c") {
+        current_bright();
+    } elsif ($OPTION eq "-n" || $OPTION eq "-on") {
+        turn_on();
+    } elsif ($OPTION eq "-i" || $OPTION eq "-info" ) {
+        info_print();
+    } elsif ($OPTION eq "-v" || $OPTION eq "-version" || $OPTION eq "--version") {
+        version_print();
+    } elsif ($OPTION =~ /[0-9]/) {
+        $BRIGHT = $OPTION;
+        adjust_brightness();
+    } else {
+        print "Option not found!\n";
+        print "Try:  \$ pi-backlight -help\n";
+        exit 1;
+    }
 }
-if (($BRIGHT >= 15) && ($BRIGHT <= 255)) {
-	open($LIGHT_FILE, '>', $FILE_BRIGHT);
-	print $LIGHT_FILE $BRIGHT;
-	close $LIGHT_FILE;
-    file_exist_brightness();
-	system("sudo bash -c 'cat /tmp/backlight_brightness.txt > /sys/class/backlight/rpi_backlight/brightness'");
-    exit 0;
-} else {
-	print "Not a valid number!\n";
-	exit 1;
-}
+
+## COMMIT ##
+current_bright();
+
+
+##### START #####
+
+#print "[15-255]:";
+#$BRIGHT = <STDIN>;
+#$BRIGHT =~ s/\n//g;
+#if ($BRIGHT !~ /^-?\d+$/ ) {
+#    print "\033[0;31mERROR: \033[0m";
+#    print "Only whole numbers: ";
+#    print "$BRIGHT";
+#    exit 1
+#}
+#
+#if (($BRIGHT >= $MIN_BRIGHTNESS) && ($BRIGHT <= $MAX_BRIGHTNESS)) {
+#    file_exist_brightness();
+#    open($CURRENT, '>', $BRIGHTNESS_FILE);
+#    print $CURRENT $BRIGHT;
+#    close($CURRENT);
+#    current_bright();
+#    exit 0;
+#} else {
+#    print "\033[0;31mFATAL ERROR: \033[0m";
+#    print "Not a valid number: ";
+#    print "$BRIGHT\n";
+#    exit 1;
+#}
+
+##### END #####
+
 
 
 
