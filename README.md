@@ -3,32 +3,37 @@
 Designed and tested for raspberry pi with official 7 inch touchdcreen. <br>
 <br>
 
-## Install:
+## Install, update and uninstall:
 
-First download if you didn't already: <br>
-`$ git clone https://github.com/WestleyK/pi-backlight.git` <br>
-Then `cd` to `pi-backlight` and: <br>
-`$ sudo ./install.sh` <br>
-<br>
-The full commands will look like this: 
+### To install:
 
 ```
+cd ~/
+mkdir raspberrypi-backlight
+cd raspberrypi-backlight/
 git clone https://github.com/WestleyK/pi-backlight.git
 cd pi-backlight/
-sudo ./install.sh
+sudo ./make.sh install
+```
+<br>
+
+### Update:
+
+Updating instructions comming soon!
+
+```
+nothing
 ```
 
 <br>
 
-To update the command and repo, do: <br>
-`$ sudo ./install.sh -update` <br>
-This will update the existing command if there is one. <br>
+### To uninstall:
+
+```
+sudo rm /usr/local/bin/pi-backlight
+```
 
 <br>
-
-To uninstall: <br>
-`$ sudo ./install.sh -uninstall` <br>
-
 <br/>
 
 
@@ -39,15 +44,16 @@ To uninstall: <br>
 ```
 pi@raspberrypi:~ $ pi-backlight -help
 Usage: pi-backlight [option]
-	-h | -help | --help (print help menu)
-	15-255 (adjust from 15 to 255)
-	-u | -up (brighter by 30)
-	-d | -down (lower by 30)
-	-s | -sleep (enter sleep mode)
-	-c (print currnt brightness, scale:[15-255])
-	-n | -on (turns backlight on to 200)
-	-v | -version | --version (print version)
-source code: https://github.com/WestleyK/pi-backlight
+        -h | -help | --help (print help menu)
+        [15-255] (adjust from: 15 to: 255)
+        -u | -up (brighter by: 25)
+        -d | -down (lower by: 25)
+        -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)
+        -c (print currnt brightness, scale:[15-255])
+        -n | -on (turns backlight on to: 200)
+        -i | -info (print script info)
+        -v | -version | --version (print version)
+source code: https://github.com/WestleyK/pi-backlight 
 pi@raspberrypi:~ $ 
 ```
 
