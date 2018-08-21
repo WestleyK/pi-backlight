@@ -50,7 +50,7 @@ $ONE_OPTION = "$ARGV[1]";
 
 if ($ONE_OPTION ne "") {
 	print "Only one argument!\n";
-	print "Try: pi-backlight -help\n";
+	print "Try:  \$ pi-backlight -help\n";
 	exit 1;
 }
 
@@ -94,7 +94,7 @@ sub file_exist_brightness() {
         print "\033[0;31mERROR: \033[0m";
         print "File not writable:\n";
         print "$BRIGHTNESS_FILE\n";
-        print "Try  $ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
+        print "Try  \$ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
         exit 1;
 
     }
@@ -111,7 +111,7 @@ sub file_exist_power() {
         print "\033[0;31mERROR: \033[0m";
         print "File not writable:\n";
         print "$BACKLIGHT_POWER\n";
-        print "Try  $ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
+        print "Try  \$ sudo pi-backlight [OPTION]  (or)  https://github.com/WestleyK/pi-backlight (for help)\n";
         exit 1;
 
     }
@@ -140,7 +140,7 @@ if ($OPTION ne "") {
 		$BRIGHT = $OPTION;
 	} else {
 		print "Option not found!\n";
-		print "Try: pi-backlight -help\n";
+		print "Try:  \$ pi-backlight -help\n";
 		exit 1;
 	}
 
