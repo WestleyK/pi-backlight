@@ -2,8 +2,8 @@
 #
 # Created by: Westley K
 # email: westley@sylabs.io
-# Date: Aug 21, 2018
-# version-1.4.5
+# Date: Aug 22, 2018
+# version-1.4.6
 # https://github.com/WestleyK/pi-backlight
 #
 # MIT License
@@ -31,8 +31,8 @@
 
 
 
-$VERSION_SCRIPT = "version-1.4.5\n";
-$SCRIPT_DATE = "Aug 21, 2018\n";
+$VERSION_SCRIPT = "version-1.4.6\n";
+$SCRIPT_DATE = "Aug 22, 2018\n";
 
 $FILE_BRIGHT = "/tmp/backlight_brightness.txt";
 $FILE_DISP_ON = "/tmp/backlight_power.txt";
@@ -123,7 +123,7 @@ sub current_bright() {
     $CONTENT_CURRENT = <$CURRENT_BRIGHTNESS_CURRENT>;
     close($CURRENT_BRIGHTNESS_CURRENT);
     print "Current brightness: ";
-    print "$CONTENT_CURRENT\n";
+    print "$CONTENT_CURRENT";
     exit 0;
 }
 
