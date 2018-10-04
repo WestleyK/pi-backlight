@@ -3,7 +3,7 @@
 Designed and tested for raspberry pi with official 7 inch touchdcreen. <br>
 <br>
 
-## Install, update and uninstall:
+## How to install, update, and uninstall:
 
 ### To install:
 
@@ -19,7 +19,7 @@ sudo ./make.sh install
 
 ### Update:
 
-Updating instructions comming soon!
+Updating instructions coming soon!
 
 ```
 nothing
@@ -80,7 +80,7 @@ And to adjust backlight down: <br>
 
 <br>
 Feel free to modify this :) <br>
-Any issues or feature request please let me know! <br>
+Please let me know of any issues or feature requests! <br>
 <br>
 
 <br>
